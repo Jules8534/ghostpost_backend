@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content%}
+
+<ul>
+    {% for item in boasts %}
+    <li>[{{item.date}}]
+        <strong>{{item.text}} </strong>
+        <a href="/up/{{item.id}}"><button>UP: <span style="color:blueviolet;"> {{item.up}}</span></button></a>
+        <a href="/down/{{item.id}}"><button>DOWN: <span style="color:blue;"> {{item.down}}</span></button></a>
+    </li>
+    {%endfor%}
+</ul>
+
+{% endblock%}
