@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content%}
+<div class="post-div{{ post.boast }}">
+    {{ghost.pk}}
+    {% if private %}
+    <h2 class="delete-post">To Delete This Post, <a href="{% url 'delete' private_url=ghost.private_url %}"> Click Here</a></h2>
+    {% endif %}
+    <br />
+    <button class="up-button"> <a href="{% url 'up_view' pk=post.pk %}">Upvote</a></button>
+    <button class="down-button"> <a href="{% url 'down_view' pk=post.pk %}">Downvote</a></button>
+    <span class="post-score"> {{ post.score }}</span>
+    <span class="post-type">{{post.boast}}"">{% if post.boast %} BOAST {% else %} ROAST {% endif %}</span>
+    <span class="post-text">{{ post}}</span>
+</div>
+
+{% endblock%}

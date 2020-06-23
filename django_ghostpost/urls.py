@@ -15,10 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from ghostpost.urls import urlpatterns as ghost_urls
+from ghostpost.urls import urlpatterns as ghostpost_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
 
-urlpatterns += ghost_urls
+urlpatterns += ghostpost_urls

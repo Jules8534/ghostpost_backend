@@ -16,21 +16,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from .models import Post
-from .views import home_page, post_view, boast_view, roast_view, vote_up, vote_down, up_view, down_view
+from . import views
+# import urlpatterns as ghostpost_urls
+from ghostpost.helpers import private_url_maker
 
 
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path('', home_page, name='home'),
-    path('addpost/', post_view, name='addpost'),
-    path('boasts/', boast_view, name='boasts'),
-    path('roasts/', roast_view, name='roasts'),
-    path('up/<int:element_id>', vote_up, name="vote_up"),
-    path('down/<int:element_id>', vote_down, name="vote_down"),
-    path('up/', up_view, name="vote_up"),
-    path('down/', down_view, name="vote_down"),
-
-
+    path('', views.index, name="home"),
+    path("ghost/<int:pk>/", views.ghost_public_detail, name="ghost_public_detail"),
+    path("ghost/<str:private_url>/", views.ghost_private_detail, name="views.ghost_private_detail"),
+    path('up/<int:pk>', views.vote_up, name="vote_up"),
+    path('down/<int:pk>', views.vote_down, name="vote_down"),
+    # path('up/<int:pk>', views.up_view, name="vote_up"),
+    # path('down/<int:pk', views.down_view, name="vote_down"),
+    path("delete/<str:private_url>/", views.delete_post, name="delete")
 
 ]

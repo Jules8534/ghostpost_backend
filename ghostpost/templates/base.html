@@ -1,3 +1,4 @@
+{% load static %}
 <html>
 
 
@@ -6,21 +7,18 @@
 </head>
 
 <body>
-    <h1>Welcome to GHOST POST!</h1>
-    <p>Filter by:
-        <span>
-            <a href="/"><button>All</button></a>
-            <a href="/boasts"><button>Boasts</button></a>
-            <a href="/roasts"><button>Roasts</button></a>
-            <a href="/up"><button>Up</button></a>
-            <a href="/down"><button>Down</button></a>
+    <header>
+        <a href="/" class="link-back-home"></a>
+            <h1 class="page-title">
+                Welcome to GHOST POST!
+            </h1>
+        </a>
+    </header>
+    <div class="page-content">
+        {% block content %} {% endblock %}
+    </div>
+    
 
-        </span>
-    </p>
-    {% block content %}
-
-    {% endblock content %}
-    <a href="/addpost"><button>ENTER A NEW BOAST OR ROAST!</button></a>
 </body>
 
 </html>

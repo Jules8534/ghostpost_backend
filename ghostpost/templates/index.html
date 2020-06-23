@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="make-ghost-post">
+    <h3>MAKE A GHOST POST:</h3>
+    <div class="ghost-post-form">
+        <form action="" method="post">
+            {% csrf_token %} {{ post_form.as_p }}
+            <input type="submit" value="Post!" />
+        </form>
+    </div>
+    {% if private_url %}
+    <span class="private_url-notice">
+        To delete your most recent post, go to <a href="post/{{ private_url }}">post/{{ private_url }}</a>
+    </span>
+
+    {%endif%}
+</div>
+<div class="ghost-posts">
+
+    <br />
+    <div class="sort-and-filter-buttons">
+        <a href="/">All</a>
+        <a href="/?type=boast">Boasts</a>
+        <a href="/?type=roast">Roasts</a>
+    </div>
+    <br /> <br />
+    {% if ghostpost %}
+    {% for post in ghostpost %}
+    <div class="post-div-{{post.boast}}">
+        <button class="up-button"> <a href="{% url 'vote_up' pk=post.pk %}">Upvote</a></button>
+        <button class="down-button"> <a href="{% url 'vote_down' pk=post.pk %}">Downvote</a></button>
+        <span class="post-datetime">{{ post.datetime }}</span>
+        <span class="post-score"> {{ post.score }}</span>
+        <span class="post-type">{% if post.boast %} BOAST {% else %} ROAST {% endif %}</span>
+        <span class="post-text">{{ post.text }}</span>
+    </div>
+    {%endfor%}
+    {% endif %}
+</div>
+<p>Sort by:
+    <span>
+        <a href="/?sort=up"><button>Up</button></a>
+        <a href="/?sort=down"><button>Down</button></a>
+    </span>
+</p>
+{% endblock%}

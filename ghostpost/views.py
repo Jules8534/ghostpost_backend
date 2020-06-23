@@ -1,75 +1,84 @@
-from django.shortcuts import render, reverse
-from .models import Post
-from .forms import Post_form
-from django.http import HttpResponse, HttpResponseRedirect
-from django.utils import timezone
-
+from django.shortcuts import render, reverse, HttpResponseRedirect
+from ghostpost.models import Post, Sorter
+from ghostpost.forms import Post_form
+from datetime import datetime as dt
+# from django.utils.timezone import timezone 
+from ghostpost.helpers import private_url_maker
 
 
 
 # Create your views here.
-def home_page(request):
-    post = Post.objects.values().order_by('-date')
-    return render(request, 'home_page.html', {'post': post})
+def index(request):
+    html = "index.html"
+    post_form = Post_form()
+    posts = Post.objects.all()
+    post_type = request.GET.get('type')
+    if post_type == 'boast':
+        posts = posts.filter(boast=True)
+    elif post_type == 'roast':
+        posts = posts.filter(boast=False)
+    sort = request.GET.get('sort')
+    if sort == 'up':
+        posts = posts.order_by('-score')
+    elif sort == 'down':
+        posts = posts.order_by('score')
 
-def post_view(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = Post_form(request.POST)
         if form.is_valid():
-            data = form.cleaned_data
-        #    {'post_type': 'Boast', 'text': 'jkh'}
-            print(data)
-            boast = False
-            roast = False
-            if data['post_type'] == 'Boast':
-                boast = True
-            if data['post_type'] == 'Roast':
-                roast = True
-        #    print(Post.data.values())
-
-            result = Post.objects.create(
-                roast = roast,
-                boast = boast,
-                text = data['text'],
-                up = 0,
-                down = 0,
-                date = timezone.datetime.now
+            boast = form.cleaned_data.get("boast")
+            text = form.cleaned_data.get("text")
+            Post.objects.create(
+                boast=boast,
+                text=text,
+                up=0,
+                down=0,
             )
+    return render(request, html, {
+        "current_path": request.path, "post_form": post_form, "ghostpost": posts
+    })
 
-        #   redirecturl = request.POST.get('redirect', '/')
-        #   return redirect(redirecturl)
-            return HttpResponseRedirect(reverse('home'))
-        else:
-            print(post_form.errors)
 
-    form = Post_form()
-    return render(request, 'add_post.html', {'form': form})
 
-def boast_view(request):
-    boasts = Post.objects.filter(boast = 'True').order_by('-date')
-    return render(request, 'boasts.html', {'boasts': boasts})
 
-def roast_view(request):
-    roasts = Post.objects.filter(roast = 'True').order_by('-date')
-    return render(request, 'roasts.html', {'roasts': roasts})
+def ghost_public_detail(request, pk):
+    html =  "ghost_detail.html"
+    ghost = Post.objects.get(pk=pk)
+    private = False
+    return render(request, html, {"ghost": ghost, "private": private})
 
-def vote_up(request, element_id):
-    vote = Post.objects.get(id=element_id)
-    vote.up += 1
-    vote.save()
-    return HttpResponseRedirect(reverse('home'))
+def ghost_private_detail(request, private_url):
+    html = "ghost_detail.html"
+    ghost = Post.objects.get(pk=pk)
+    private = False
+    return render(request, html, {"ghost": ghost, "private": private})
 
-def vote_down(request, element_id):
-    vote = Post.objects.get(id=element_id)
-    vote.down += 1
-    vote.save()
-    return HttpResponseRedirect(reverse('home'))
 
-def up_view(request):
-    up = Post.objects.values().order_by('-up')
-    return render(request, 'up.html', {'up': up})
+def vote_up(request, pk):
+    post = Post.objects.get(id=pk)
+    post.up += 1
+    post.save()
+    return HttpResponseRedirect(reverse("home"))
 
-def down_view(request):
-    down = Post.objects.values().order_by('-down')
-    return render(request, 'down.html', {'down': down})
+def vote_down(request, pk):
+    post = Post.objects.get(id=pk)
+    post.down += 1
+    post.save()
+    return HttpResponseRedirect(reverse("home"))
+
+def up_view(request, pk):
+    post = Post.objects.get(id=pk)
+    post.up_view += 1
+    post.save()
+    return HttpResponseRedirect(reverse("home"))
+
+def down_view(request, pk):
+    post = Post.objects.get(id=pk)
+    post.down_view += 1
+    post.save()
+    return HttpResponseRedirect(reverse("home"))
+
+def delete_post(request, private_url):
+    deleted = Post.objects.get(private_url=private_url).delete()
+    return HttpResponseRedirect(reverse("home"))
 
