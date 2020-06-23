@@ -33,6 +33,7 @@
         <span class="post-score"> {{ post.score }}</span>
         <span class="post-type">{% if post.boast %} BOAST {% else %} ROAST {% endif %}</span>
         <span class="post-text">{{ post.text }}</span>
+        <span class="post-text">{{ post.created_at | date:'Y-m-d H:i' }}</span>
     </div>
     {%endfor%}
     {% endif %}

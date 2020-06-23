@@ -8,8 +8,6 @@ class Post (models.Model):
     up = models.IntegerField(default=0)
     down = models.IntegerField(default=0)
     score = models.IntegerField(default=0)
-    public_url = models.CharField(null=True, max_length=30)
-    private_url = models.CharField(null=True, max_length=6)
 
     created_at = models.DateTimeField(auto_now_add=True)
 

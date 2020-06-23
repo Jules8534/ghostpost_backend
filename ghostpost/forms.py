@@ -1,8 +1,8 @@
 from django import forms
-# from .models import Post
+from .models import Post
 
 
-class Post_form(forms.Form):
+class PostForm(forms.ModelForm):
     BOAST_ROAST_CHOICES = [
         (True, "BOAST"),
         (False, "ROAST")
@@ -11,8 +11,7 @@ class Post_form(forms.Form):
         widget=forms.RadioSelect, 
         choices=BOAST_ROAST_CHOICES
     )    
-    
-    text = forms.CharField(max_length=280)
 
-    def __str__(self):
-        return self.text
+    class Meta:
+        model = Post
+        exclude = ['up', 'down', 'score']

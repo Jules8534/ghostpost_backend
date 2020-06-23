@@ -1,6 +1,6 @@
 from django.shortcuts import render, reverse, HttpResponseRedirect
 from ghostpost.models import Post, Sorter
-from ghostpost.forms import Post_form
+from ghostpost.forms import PostForm
 from datetime import datetime as dt
 # from django.utils.timezone import timezone 
 from ghostpost.helpers import private_url_maker
@@ -10,7 +10,7 @@ from ghostpost.helpers import private_url_maker
 # Create your views here.
 def index(request):
     html = "index.html"
-    post_form = Post_form()
+    post_form = PostForm(initial={'boast': True})
     posts = Post.objects.all()
     post_type = request.GET.get('type')
     if post_type == 'boast':
@@ -24,7 +24,7 @@ def index(request):
         posts = posts.order_by('score')
 
     if request.method == "POST":
-        form = Post_form(request.POST)
+        form = PostForm(request.POST)
         if form.is_valid():
             boast = form.cleaned_data.get("boast")
             text = form.cleaned_data.get("text")
