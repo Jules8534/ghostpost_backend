@@ -4,7 +4,6 @@ from django.db import models
 # Create your models here.
 class Post (models.Model):
     boast = models.BooleanField(default=True)
-    roast = models.BooleanField(default=False)
     text = models.CharField(blank=False, null=True, max_length=280)
     up = models.IntegerField(default=0)
     down = models.IntegerField(default=0)
