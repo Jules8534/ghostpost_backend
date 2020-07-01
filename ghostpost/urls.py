@@ -14,23 +14,25 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from .models import Post
 from . import views
-# import urlpatterns as ghostpost_urls
+from rest_framework import routers
 from ghostpost.helpers import private_url_maker
 
 
+router = routers.DefaultRouter()
+router.register(r'posts', views.PostViewSet)
+
 
 urlpatterns = [
-    # path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('', views.index, name="home"),
     path("ghost/<int:pk>/", views.ghost_public_detail, name="ghost_public_detail"),
     path("ghost/<str:private_url>/", views.ghost_private_detail, name="views.ghost_private_detail"),
     path('up/<int:pk>', views.vote_up, name="vote_up"),
     path('down/<int:pk>', views.vote_down, name="vote_down"),
-    # path('up/<int:pk>', views.up_view, name="vote_up"),
-    # path('down/<int:pk', views.down_view, name="vote_down"),
-    path("delete/<str:private_url>/", views.delete_post, name="delete")
+    path("delete/<str:private_url>/", views.delete_post, name="delete"),
+    path('api/', include(router.urls))
 
 ]

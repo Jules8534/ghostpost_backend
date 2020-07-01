@@ -2,12 +2,34 @@ from django.shortcuts import render, reverse, HttpResponseRedirect
 from ghostpost.models import Post, Sorter
 from ghostpost.forms import PostForm
 from datetime import datetime as dt
-# from django.utils.timezone import timezone 
 from ghostpost.helpers import private_url_maker
+from rest_framework import viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from .serializers import PostSerializer
 
 
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
 
-# Create your views here.
+    @action(detail=True, methods=['post'])
+    def up(self, request, *args, **kwargs):
+        post = self.get_object()
+        post.up += 1
+        post.save()
+        serializer = self.get_serializer(post)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def down(self, request, *args, **kwargs):
+        post = self.get_object()
+        post.down += 1
+        post.save()
+        serializer = self.get_serializer(post)
+        return Response(serializer.data)
+
+
 def index(request):
     html = "index.html"
     post_form = PostForm(initial={'boast': True})

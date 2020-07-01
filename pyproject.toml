@@ -7,6 +7,7 @@ authors = ["Julita Marshall <julitamcg5@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.8"
 django = "^3.0.6"
+djangorestframework = "^3.11.0"
 
 [tool.poetry.dev-dependencies]
 
