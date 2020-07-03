@@ -13,6 +13,24 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
+    @action(detail=False, methods=['get'])
+    def sorted(self, request, *args, **kwargs):
+        posts = self.get_queryset().order_by('-score')
+        serializer = self.get_serializer(posts, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
+    def boasts(self, request, *args, **kwargs):
+        posts = self.get_queryset().filter(boast=True)
+        serializer = self.get_serializer(posts, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def roasts(self, request, *args, **kwargs):
+        posts = self.get_queryset().filter(boast=False)
+        serializer = self.get_serializer(posts, many=True)
+        return Response(serializer.data)
+
     @action(detail=True, methods=['post'])
     def up(self, request, *args, **kwargs):
         post = self.get_object()
